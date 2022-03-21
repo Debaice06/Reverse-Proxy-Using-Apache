@@ -1,0 +1,4 @@
+https://www.baeldung.com/openssl-self-signed-cert
+
+Password Less:
+https://justin.kelly.org.au/how-to-create-a-self-sign-ssl-cert-with-no-pa/

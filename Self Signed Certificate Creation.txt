@@ -1,0 +1,33 @@
+openssl genrsa -des3 -out server.key 2048
+
+** If we want our private key unencrypted, we can simply remove the -des3 option from the command.
+
+openssl req -newkey rsa:2048 -keyout server.key -out server.csr
+
+** If we want our private key unencrypted, we can add the -nodes option:
+openssl req -newkey rsa:2048 -nodes -keyout server.key -out server.csr
+
+openssl x509 -signkey server.key -in server.csr -req -days 5000 -out server.crt
+
+openssl req -x509 -sha256 -days 5000 -newkey rsa:2048 -keyout rootCA.key -out rootCA.crt
+
+vi restservice.ext
+
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = restservicecheck.com
+
+openssl x509 -req -CA rootCA.crt -CAkey rootCA.key -in server.csr -out restservice.crt -days 5000 -CAcreateserial -extfile restservice.ext
+
+
+openssl x509 -text -noout -in restservice.crt
+
+
+
+yum install mod_ssl openssh
+
+
